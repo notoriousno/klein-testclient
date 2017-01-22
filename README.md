@@ -1,6 +1,34 @@
 # Description
 
 A helper class to aide in testing applications based on ``klien``.
+It's quite difficult for those who are new to Klein or Twisted to comprehend the testing process.
+`Kleint` (pronounced like *client*) will hopefully bridge that gap and ease developers into more complicated/flexible methods.
+
+
+# Example
+
+``` python
+#----- Klein Application -----
+from klein import Klein
+app = Klein()
+
+@app.route('/hello')
+def hello(request):
+    request.setResponseCode(418)
+    request.setHeader('Content-Type', 'application/json')
+    return 'hello world'
+
+#----- Test Application -----
+from kleint import Kleint
+tester = Kleint(app)
+
+response = tester.request('GET', '/hello')
+@response.addCallback(resp)
+def verify(resp):
+    assert resp.content == 'hello world'
+    assert resp.code == 418
+    assert resp.raw_headers['content-type'][0] == 'application/json'
+```
 
 
 # Design
